@@ -22,7 +22,7 @@ export const auth = defineAuth({
       mutable: true,
     },
     address: {
-      required: true,
+      required: false,
       mutable: true,
     },
     familyName: {
