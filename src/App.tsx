@@ -1,35 +1,98 @@
-import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from '/vite.svg'
-import './App.css'
+import { BrowserRouter, Routes, Route } from "react-router-dom";
+import { useEffect } from "react";
+
+import HeaderFooterWrapper from "./components/HeaderFooterWrapper.tsx";
+
+import About from "./pages/About.tsx";
+import Contact from "./pages/Contact.tsx";
+import Courses from "./pages/Courses.tsx";
+import Home from "./pages/Home.tsx";
+import Login from "./pages/Login.tsx";
 
 function App() {
-  const [count, setCount] = useState(0)
+  function refresh() {
+    displayFooterMoveTopButton();
+    shrinkNav();
+  }
+  useEffect(() => {
+    refresh();
+    window.onscroll = function () {
+      refresh();
+    };
+  });
 
   return (
-    <>
-      <div>
-        <a href="https://vitejs.dev" target="_blank">
-          <img src={viteLogo} className="logo" alt="Vite logo" />
-        </a>
-        <a href="https://react.dev" target="_blank">
-          <img src={reactLogo} className="logo react" alt="React logo" />
-        </a>
-      </div>
-      <h1>Vite + React</h1>
-      <div className="card">
-        <button onClick={() => setCount((count) => count + 1)}>
-          count is {count}
-        </button>
-        <p>
-          Edit <code>src/App.tsx</code> and save to test HMR
-        </p>
-      </div>
-      <p className="read-the-docs">
-        Click on the Vite and React logos to learn more
-      </p>
-    </>
-  )
+    <div>
+      <BrowserRouter>
+        <Routes>
+          <Route
+            path="/"
+            element={
+              <HeaderFooterWrapper>
+                <Home />
+              </HeaderFooterWrapper>
+            }
+          />
+          <Route
+            path="/courses"
+            element={
+              <HeaderFooterWrapper>
+                <Courses />
+              </HeaderFooterWrapper>
+            }
+          />
+          <Route
+            path="/contact"
+            element={
+              <HeaderFooterWrapper>
+                <Contact />
+              </HeaderFooterWrapper>
+            }
+          />
+          <Route
+            path="/about"
+            element={
+              <HeaderFooterWrapper>
+                <About />
+              </HeaderFooterWrapper>
+            }
+          />
+          <Route path="/login" element={<Login />} />
+        </Routes>
+      </BrowserRouter>
+    </div>
+  );
 }
 
-export default App
+function displayFooterMoveTopButton() {
+  const movetopElement = document.getElementById("movetop");
+  if (movetopElement) {
+    if (
+      document.body.scrollTop > 20 ||
+      document.documentElement.scrollTop > 20
+    ) {
+      movetopElement.style.display = "block";
+    } else {
+      movetopElement.style.display = "none";
+    }
+  }
+}
+
+function shrinkNav() {
+  const nav = document.getElementById("site-header");
+
+  if (nav) {
+    if (
+      document.body.scrollTop >= 80 ||
+      document.documentElement.scrollTop >= 80
+    ) {
+      nav.classList.add("nav-fixed");
+      console.log("nav-fixed");
+    } else {
+      nav.classList.remove("nav-fixed");
+      console.log("nav-removed");
+    }
+  }
+}
+
+export default App;
