@@ -1,6 +1,8 @@
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import { useEffect } from "react";
 
+import { next } from "./assets/utils/carousel.ts";
+
 import HeaderFooterWrapper from "./components/HeaderFooterWrapper.tsx";
 
 import About from "./pages/About.tsx";
@@ -10,15 +12,25 @@ import Home from "./pages/Home.tsx";
 import Login from "./pages/Login.tsx";
 
 function App() {
+  function onMounted() {
+    refresh();
+    
+    setInterval(() => {
+      next();
+    }, 5000);
+
+    window.onscroll = function () {
+      refresh();
+    };
+  }
+
   function refresh() {
     displayFooterMoveTopButton();
     shrinkNav();
   }
+
   useEffect(() => {
-    refresh();
-    window.onscroll = function () {
-      refresh();
-    };
+    addEventListener("load", onMounted);
   });
 
   return (

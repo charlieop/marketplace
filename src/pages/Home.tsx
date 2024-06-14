@@ -1,105 +1,140 @@
-function Home() {
+import "./home.css";
+import { next, prev } from "../assets/utils/carousel.ts";
 
+function Home() {
+  
   return (
     <div>
       {/* main-slider */}
       <section className="w3l-main-slider" id="home">
-        <div className="companies20-content">
-          <div className="owl-one owl-carousel owl-theme">
-            <div className="item">
-              <li>
-                <div className="slider-info banner-view bg bg2">
-                  <div className="banner-info">
-                    <div className="container">
-                      <div className="banner-info-bg">
-                        <h5>50% Discount on all Popular Products</h5>
-                        <p className="mt-4 pr-lg-4">
-                          Take the first step to your journey to success with us
-                        </p>
-                        <a
-                          className="btn btn-style btn-primary mt-sm-5 mt-4 mr-2"
-                          href="about.html"
-                        >
-                          Ready to get started?
-                        </a>
+        <div className="carousel-area">
+          <div
+            id="carouselExampleSlidesOnly"
+            className="carousel slide"
+            data-ride="carousel"
+          >
+            <div className="carousel-inner">
+              <div className="carousel-item active">
+                <li>
+                  <div className="slider-info banner-view bg bg2">
+                    <div className="banner-</section>info">
+                      <div className="container">
+                        <div className="banner-info-bg">
+                          <h5>50% Discount on all Popular Products</h5>
+                          <p className="mt-4 pr-lg-4">
+                            Take the first step to your journey to success with
+                            us
+                          </p>
+                          <a
+                            className="btn btn-style btn-primary mt-sm-5 mt-4 mr-2"
+                            href="about.html"
+                          >
+                            Ready to get started?
+                          </a>
+                        </div>
                       </div>
                     </div>
                   </div>
-                </div>
-              </li>
-            </div>
-            <div className="item">
-              <li>
-                <div className="slider-info  banner-view banner-top1 bg bg2">
-                  <div className="banner-info">
-                    <div className="container">
-                      <div className="banner-info-bg">
-                        <h5>Improve your business in Less Time </h5>
-                        <p className="mt-4 pr-lg-4">
-                          Our self improvement Products is very effective
-                        </p>
-                        <a
-                          className="btn btn-style btn-primary mt-sm-5 mt-4 mr-2"
-                          href="about.html"
-                        >
-                          Ready to get started?
-                        </a>
+                </li>
+              </div>
+              <div className="carousel-item next">
+                <li>
+                  <div className="slider-info  banner-view banner-top1 bg bg2">
+                    <div className="banner-info">
+                      <div className="container">
+                        <div className="banner-info-bg">
+                          <h5>Improve your business in Less Time </h5>
+                          <p className="mt-4 pr-lg-4">
+                            Our self improvement Products is very effective
+                          </p>
+                          <a
+                            className="btn btn-style btn-primary mt-sm-5 mt-4 mr-2"
+                            href="about.html"
+                          >
+                            Ready to get started?
+                          </a>
+                        </div>
                       </div>
                     </div>
                   </div>
-                </div>
-              </li>
-            </div>
-            <div className="item">
-              <li>
-                <div className="slider-info banner-view banner-top2 bg bg2">
-                  <div className="banner-info">
-                    <div className="container">
-                      <div className="banner-info-bg">
-                        <h5>Be More Productive to Be More Successful</h5>
-                        <p className="mt-4 pr-lg-4">
-                          Don't waste your time, check out our productive
-                          Products
-                        </p>
-                        <a
-                          className="btn btn-style btn-primary mt-sm-5 mt-4 mr-2"
-                          href="about.html"
-                        >
-                          Ready to get started?
-                        </a>
+                </li>
+              </div>
+              <div className="carousel-item">
+                <li>
+                  <div className="slider-info banner-view banner-top2 bg bg2">
+                    <div className="banner-info">
+                      <div className="container">
+                        <div className="banner-info-bg">
+                          <h5>Be More Productive to Be More Successful</h5>
+                          <p className="mt-4 pr-lg-4">
+                            Don't waste your time, check out our productive
+                            Products
+                          </p>
+                          <a
+                            className="btn btn-style btn-primary mt-sm-5 mt-4 mr-2"
+                            href="about.html"
+                          >
+                            Ready to get started?
+                          </a>
+                        </div>
                       </div>
                     </div>
                   </div>
-                </div>
-              </li>
-            </div>
-            <div className="item">
-              <li>
-                <div className="slider-info banner-view banner-top3 bg bg2">
-                  <div className="banner-info">
-                    <div className="container">
-                      <div className="banner-info-bg">
-                        <h5>
-                          Enhance your marketing skill with best online Products
-                        </h5>
-                        <p className="mt-4 pr-lg-4">
-                          Take the first step to your journey to success with us
-                        </p>
-                        <a
-                          className="btn btn-style btn-primary mt-sm-5 mt-4 mr-2"
-                          href="about.html"
-                        >
-                          Ready to get started?
-                        </a>
+                </li>
+              </div>
+              <div className="carousel-item prev">
+                <li>
+                  <div className="slider-info banner-view banner-top3 bg bg2">
+                    <div className="banner-info">
+                      <div className="container">
+                        <div className="banner-info-bg">
+                          <h5>
+                            Enhance your marketing skill with best online
+                            Products
+                          </h5>
+                          <p className="mt-4 pr-lg-4">
+                            Take the first step to your journey to success with
+                            us
+                          </p>
+                          <a
+                            className="btn btn-style btn-primary mt-sm-5 mt-4 mr-2"
+                            href="about.html"
+                          >
+                            Ready to get started?
+                          </a>
+                        </div>
                       </div>
                     </div>
                   </div>
-                </div>
-              </li>
+                </li>
+              </div>
             </div>
           </div>
+          <a
+            className="carousel-control-prev"
+            role="button"
+            data-slide="prev"
+            onClick={prev}
+          >
+            <span
+              className="carousel-control-prev-icon"
+              aria-hidden="true"
+            ></span>
+            <span className="sr-only">Previous</span>
+          </a>
+          <a
+            className="carousel-control-next"
+            role="button"
+            data-slide="next"
+            onClick={next}
+          >
+            <span
+              className="carousel-control-next-icon"
+              aria-hidden="true"
+            ></span>
+            <span className="sr-only">Next</span>
+          </a>
         </div>
-
         <div className="waveWrapper waveAnimation">
           <svg viewBox="0 0 500 150" preserveAspectRatio="none">
             <path

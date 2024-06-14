@@ -1,0 +1,36 @@
+.carousel-area {
+  background-color: rebeccapurple;
+}
+
+.carousel-slider {
+  display: flex;
+  width: 100%;
+}
+
+.carousel-slider .item {
+  flex: 1 0 100%;
+  max-width: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-size: 2rem;
+  color: white;
+}
+.carousel-item {
+    transition: transform 1s;
+}
+
+.carousel-item.next {
+  transform: translateX(100%);
+  display: block;
+}
+.carousel-item.prev {
+  transform: translateX(-100%);
+  display: block;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .carousel-slider .item {
+    transition: none;
+  }
+}
