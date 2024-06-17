@@ -1,7 +1,8 @@
 import { BrowserRouter, Routes, Route } from "react-router-dom";
-import { useEffect } from "react";
+import { useEffect, useRef } from "react";
 
 import { next } from "./assets/utils/carousel.ts";
+import { startAuthListener } from "./assets/utils/userSession.ts";
 
 import HeaderFooterWrapper from "./components/HeaderFooterWrapper.tsx";
 
@@ -12,9 +13,11 @@ import Home from "./pages/Home.tsx";
 import Login from "./pages/Login.tsx";
 
 function App() {
+  const mounted = useRef(false);
+
   function onMounted() {
+    startAuthListener();
     refresh();
-    
     setInterval(() => {
       next();
     }, 5000);
@@ -30,7 +33,10 @@ function App() {
   }
 
   useEffect(() => {
-    addEventListener("load", onMounted);
+    if (!mounted.current) {
+      mounted.current = true;
+      onMounted();
+    }
   });
 
   return (
@@ -99,10 +105,8 @@ function shrinkNav() {
       document.documentElement.scrollTop >= 80
     ) {
       nav.classList.add("nav-fixed");
-      console.log("nav-fixed");
     } else {
       nav.classList.remove("nav-fixed");
-      console.log("nav-removed");
     }
   }
 }

@@ -2,7 +2,6 @@ import "./home.css";
 import { next, prev } from "../assets/utils/carousel.ts";
 
 function Home() {
-  
   return (
     <div>
       {/* main-slider */}

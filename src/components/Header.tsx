@@ -1,7 +1,11 @@
 import { useState } from "react";
 import { Link } from "react-router-dom";
+import { useAuthenticator } from "@aws-amplify/ui-react";
+import { getUserAttributes } from "../assets/utils/userSession";
 
 function Header() {
+  const { authStatus } = useAuthenticator((context) => [context.authStatus]);
+
   const currentTheme = localStorage.getItem("theme");
 
   if (currentTheme) {
@@ -126,8 +130,20 @@ function Header() {
               </div>
               <div className="top-quote mr-lg-2 text-center">
                 <Link to="/login" className="btn login mr-2">
-                  <span className="fa fa-user"></span>
-                  login
+                  <>
+                    {authStatus !== "authenticated" ? (
+                      <>
+                        {" "}
+                        <span className="fa fa-user"></span>
+                        login
+                      </>
+                    ) : (
+                      <>
+                        <span className="fa fa-user"></span>
+                        {getUserAttributes().preferred_username}
+                      </>
+                    )}
+                  </>
                 </Link>
               </div>
             </div>
