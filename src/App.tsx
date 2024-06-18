@@ -11,6 +11,7 @@ import Contact from "./pages/Contact.tsx";
 import Courses from "./pages/Courses.tsx";
 import Home from "./pages/Home.tsx";
 import Login from "./pages/Login.tsx";
+import ProductDetails from "./pages/ProductDetails.tsx";
 
 function App() {
   const mounted = useRef(false);
@@ -72,6 +73,14 @@ function App() {
             element={
               <HeaderFooterWrapper>
                 <About />
+              </HeaderFooterWrapper>
+            }
+          />
+          <Route
+            path="/product-details"
+            element={
+              <HeaderFooterWrapper>
+                <ProductDetails />
               </HeaderFooterWrapper>
             }
           />

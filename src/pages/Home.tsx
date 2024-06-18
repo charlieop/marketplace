@@ -1,5 +1,6 @@
-import "./home.css";
+import "./css/home.css";
 import { next, prev } from "../assets/utils/carousel.ts";
+import { Link } from "react-router-dom";
 
 function Home() {
   return (
@@ -24,12 +25,12 @@ function Home() {
                             Take the first step to your journey to success with
                             us
                           </p>
-                          <a
+                          <Link
                             className="btn btn-style btn-primary mt-sm-5 mt-4 mr-2"
-                            href="about.html"
+                            to="product-details"
                           >
-                            Ready to get started?
-                          </a>
+                            View the Product
+                          </Link>
                         </div>
                       </div>
                     </div>
@@ -46,12 +47,12 @@ function Home() {
                           <p className="mt-4 pr-lg-4">
                             Our self improvement Products is very effective
                           </p>
-                          <a
+                          <Link
                             className="btn btn-style btn-primary mt-sm-5 mt-4 mr-2"
-                            href="about.html"
+                            to="product-details"
                           >
-                            Ready to get started?
-                          </a>
+                            View the Product
+                          </Link>
                         </div>
                       </div>
                     </div>
@@ -69,12 +70,12 @@ function Home() {
                             Don't waste your time, check out our productive
                             Products
                           </p>
-                          <a
+                          <Link
                             className="btn btn-style btn-primary mt-sm-5 mt-4 mr-2"
-                            href="about.html"
+                            to="product-details"
                           >
-                            Ready to get started?
-                          </a>
+                            View the Product
+                          </Link>
                         </div>
                       </div>
                     </div>
@@ -95,12 +96,12 @@ function Home() {
                             Take the first step to your journey to success with
                             us
                           </p>
-                          <a
+                          <Link
                             className="btn btn-style btn-primary mt-sm-5 mt-4 mr-2"
-                            href="about.html"
+                            to="product-details"
                           >
-                            Ready to get started?
-                          </a>
+                            View the Product
+                          </Link>
                         </div>
                       </div>
                     </div>
