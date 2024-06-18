@@ -2,20 +2,40 @@
 
 ## Database Design
 
-Check and edit the database model at here: 
+Check and edit the database model at here:
 [database](https://lucid.app/lucidchart/90c06bd1-b53f-45f2-9fb4-699e70969565/edit?viewport_loc=-11%2C-10%2C1576%2C853%2C0_0&invitationId=inv_978a158c-65bc-440a-9c18-ec3643ab240b)
 
 ## Style Guild
 
-The initial css file is using *bootstrap* framework for styling\
+The initial css file is using _bootstrap_ framework for styling\
 Check it from [here](https://getbootstrap.com/)\
 Proper CSS resets are also done, and please try to use the css-custom-properties\
+
+## Deploy Settings
+
+To enable react history mode router, please setup the following rewrites:\
+
+```
+{
+  "source": "</^[^.]+$|\\.(?!(css|gif|ico|jpg|js|png|txt|svg|woff|woff2|ttf|map|json|webp|html|xml|webmanifest|mp4)$)([^.]+$)/>",
+  "target": "/index.html",
+  "status": "200",
+  "condition": null
+},
+{
+  "source": "/<*>",
+  "target": "/index.html",
+  "status": "404-200",
+  "condition": null
+}
+```
 
 ## Available Scripts
 
 In the project directory, you can run:
 
 ### `npm run dev`
+
 Runs the app in the development mode.\
 The page will reload when you make changes.\
 You may also see any lint errors in the console.
@@ -49,12 +69,12 @@ If you are developing a production application, we recommend updating the config
 export default {
   // other rules...
   parserOptions: {
-    ecmaVersion: 'latest',
-    sourceType: 'module',
-    project: ['./tsconfig.json', './tsconfig.node.json'],
+    ecmaVersion: "latest",
+    sourceType: "module",
+    project: ["./tsconfig.json", "./tsconfig.node.json"],
     tsconfigRootDir: __dirname,
   },
-}
+};
 ```
 
 - Replace `plugin:@typescript-eslint/recommended` to `plugin:@typescript-eslint/recommended-type-checked` or `plugin:@typescript-eslint/strict-type-checked`
