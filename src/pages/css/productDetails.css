@@ -1,4 +1,33 @@
 .productDetail-wrapper {
   min-height: 100svh;
-  padding-inline: 5vw;
+  padding-inline: 15vw;
+  display: grid;
+  grid-template-columns: 1.5fr 1fr;
+  gap: 1rem;
+}
+
+.grid-col {
+  display: flex;
+  flex-direction: column;
+  padding-inline: 1rem;
+}
+
+.group {
+  padding: 1rem;
+}
+
+p {
+  margin-left: 0.5rem;
+}
+
+h1 {
+  font-size: 3rem;
+}
+
+img {
+  margin-top: 2rem;
+}
+
+.detail-btn {
+  margin-top: 1rem;
 }
