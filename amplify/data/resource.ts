@@ -13,8 +13,8 @@ const schema = a.schema({
       requirement: a.string(),
     })
     .authorization((allow) => [
-      allow.authenticated(),
       allow.guest().to(["read"]),
+      allow.authenticated("identityPool"),
     ]),
 });
 
