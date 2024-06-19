@@ -27,7 +27,7 @@ function Home() {
                           </p>
                           <Link
                             className="btn btn-style btn-primary mt-sm-5 mt-4 mr-2"
-                            to="product-details"
+                            to="product-list"
                           >
                             View the Product
                           </Link>
@@ -49,7 +49,7 @@ function Home() {
                           </p>
                           <Link
                             className="btn btn-style btn-primary mt-sm-5 mt-4 mr-2"
-                            to="product-details"
+                            to="product-list"
                           >
                             View the Product
                           </Link>
@@ -72,7 +72,7 @@ function Home() {
                           </p>
                           <Link
                             className="btn btn-style btn-primary mt-sm-5 mt-4 mr-2"
-                            to="product-details"
+                            to="product-list"
                           >
                             View the Product
                           </Link>
@@ -98,7 +98,7 @@ function Home() {
                           </p>
                           <Link
                             className="btn btn-style btn-primary mt-sm-5 mt-4 mr-2"
-                            to="product-details"
+                            to="product-list"
                           >
                             View the Product
                           </Link>

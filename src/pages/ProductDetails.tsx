@@ -5,7 +5,7 @@ import type { Schema } from "../../amplify/data/resource";
 import { generateClient } from "aws-amplify/data";
 import { uploadData, remove } from "aws-amplify/storage";
 import { useAuthenticator } from "@aws-amplify/ui-react";
-import { useParams } from "react-router-dom";
+import { useParams, useNavigate } from "react-router-dom";
 
 import { Button, Input, Loader } from "@aws-amplify/ui-react";
 
@@ -18,6 +18,7 @@ function ProductDetails() {
   const { id } = useParams<{ id: string }>();
   const [product, setProduct] = useState<Schema["Product"]["type"]>();
   const { authStatus } = useAuthenticator((context) => [context.authStatus]);
+  const navigate = useNavigate();
 
   function handelFileChange(event: React.ChangeEvent<HTMLInputElement>) {
     const files = event.target.files;
@@ -100,6 +101,9 @@ function ProductDetails() {
       ...newProduct,
     });
     console.log("createProduct: ", a);
+    if (a.data) {
+      navigate(`/product-details/${a.data.id}`);
+    }
     setProduct(a.data ?? undefined);
   };
 
@@ -123,7 +127,7 @@ function ProductDetails() {
       console.log("deleted:", a);
       setProduct(undefined);
     }
-    switchProduct();
+    navigate("/product-list");
   };
 
   useEffect(() => {
@@ -196,18 +200,27 @@ function ProductDetails() {
               ></Input>
             </div>
           )}
-          {authStatus === "authenticated" && !id && (
+          <Button
+            className="detail-btn"
+            onClick={() => {
+              navigate("/product-list");
+            }}
+            variation="primary"
+          >
+            Back to List View
+          </Button>
+          {!id && (
+            <Button className="detail-btn" onClick={switchProduct}>
+              Switch to a different Product
+            </Button>
+          )}
+          {authStatus === "authenticated" && (
             <Button
               className="detail-btn"
               onClick={createProduct}
               colorTheme="success"
             >
               Create a new Product
-            </Button>
-          )}
-          {!id && (
-            <Button className="detail-btn" onClick={switchProduct}>
-              Switch to a different Product
             </Button>
           )}
           {authStatus === "authenticated" && (

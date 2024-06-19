@@ -11,6 +11,7 @@ import Contact from "./pages/Contact.tsx";
 import Courses from "./pages/Courses.tsx";
 import Home from "./pages/Home.tsx";
 import Login from "./pages/Login.tsx";
+import ProductList from "./pages/ProductList.tsx";
 import ProductDetails from "./pages/ProductDetails.tsx";
 
 function App() {
@@ -101,6 +102,14 @@ function App() {
               }
             />
           </Route>
+          <Route
+            path="/product-list"
+            element={
+              <HeaderFooterWrapper>
+                <ProductList />
+              </HeaderFooterWrapper>
+            }
+          />
           <Route path="/login" element={<Login />} />
         </Routes>
       </BrowserRouter>
