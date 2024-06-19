@@ -18,19 +18,24 @@ import "./css/productList.css";
 const client = generateClient<Schema>();
 
 function ProductList() {
-  const [productList, setProductList] = useState<Schema["Product"]["type"][]>(
-    []
-  );
+  interface Product {
+    name: string;
+    id: string;
+    imagePath?: string | null;
+  }
+  const randomProduct = {
+    name: "View Random Product",
+    id: "random",
+  };
+
+  const [productList, setProductList] = useState<Product[]>([]);
 
   const fetchProduct = async () => {
-    const { data: items } = await client.models.Product.list();
+    const { data: items } = await client.models.Product.list({
+      selectionSet: ["name", "id", "imagePath"],
+    });
     console.log(items);
-    const randomProduct = {
-      name: "Product Name",
-      id: "random",
-      createdAt: "",
-      updatedAt: "",
-    };
+
     setProductList([randomProduct, ...items]);
   };
 
@@ -44,18 +49,22 @@ function ProductList() {
       <section className="list">
         <Collection
           items={productList}
-          type="grid"
+          // type="list"
+          // direction="row"
+          // wrap="wrap"
           gap="3rem"
-          templateColumns="1fr 1fr 1fr 1fr"
+          type="grid"
+          templateColumns="repeat(auto-fill,minmax(15rem, 1fr))"
         >
           {(product, index) => (
             <Card
+              className="product-card"
               key={index}
               borderRadius="medium"
-              maxWidth="20rem"
+              maxWidth="30rem"
               variation="outlined"
             >
-              {product?.imagePath ? (
+              {product.imagePath ? (
                 <StorageImage
                   className="product-image"
                   path={product.imagePath}

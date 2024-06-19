@@ -1,14 +1,15 @@
-.product-image {
+section .product-image {
   width: 100%;
   aspect-ratio: 4/3;
   object-fit: cover;
+  margin-top: 0;
 }
 
 section.list {
   padding: 5rem;
-  padding-top: 0;
 }
 
-section img {
-  margin-top: 0;
-}
+/* .product-card {
+  flex: 1 1 20%;
+  min-width: 15rem;
+} */
