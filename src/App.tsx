@@ -83,7 +83,24 @@ function App() {
                 <ProductDetails />
               </HeaderFooterWrapper>
             }
-          />
+          >
+            <Route
+              path="/product-details/random"
+              element={
+                <HeaderFooterWrapper>
+                  <ProductDetails />
+                </HeaderFooterWrapper>
+              }
+            />
+            <Route
+              path=":id"
+              element={
+                <HeaderFooterWrapper>
+                  <ProductDetails />
+                </HeaderFooterWrapper>
+              }
+            />
+          </Route>
           <Route path="/login" element={<Login />} />
         </Routes>
       </BrowserRouter>

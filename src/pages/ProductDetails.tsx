@@ -3,132 +3,104 @@ import BreadCrumps from "../components/BreadCrumps";
 import { useState, useEffect } from "react";
 import type { Schema } from "../../amplify/data/resource";
 import { generateClient } from "aws-amplify/data";
-import { Button } from "@aws-amplify/ui-react";
+import { uploadData, remove } from "aws-amplify/storage";
+import { useAuthenticator } from "@aws-amplify/ui-react";
+import { useParams } from "react-router-dom";
 
-const client = generateClient<Schema>({
-  authMode: "identityPool",
-});
+import { Button, Input, Loader } from "@aws-amplify/ui-react";
+
+import { generateRandomProduct } from "../assets/utils/generateRandomProduct";
+import { StorageImage } from "@aws-amplify/ui-react-storage";
+
+const client = generateClient<Schema>();
 
 function ProductDetails() {
+  const { id } = useParams<{ id: string }>();
   const [product, setProduct] = useState<Schema["Product"]["type"]>();
+  const { authStatus } = useAuthenticator((context) => [context.authStatus]);
+
+  function handelFileChange(event: React.ChangeEvent<HTMLInputElement>) {
+    const files = event.target.files;
+    if (!files || files.length === 0) {
+      return;
+    }
+    const file = files[0];
+    console.log("getFile:", file);
+    if (file.size > 1024 * 1024) {
+      alert("File size is too large, please upload a file smaller than 1MB.");
+      event.target.files = null;
+      event.target.value = "";
+      return;
+    }
+    if (!product) {
+      alert("Product not found");
+      event.target.files = null;
+      event.target.value = "";
+      return;
+    }
+
+    const res = uploadData({
+      data: file,
+      path: `productDetails/imgs/${product.id}`,
+      options: {
+        contentType: file.type,
+      },
+    }).result;
+    res.then((result) => {
+      console.log("upload result: ", result);
+      modifyPath(result.path);
+      setProduct((prev) => {
+        if (prev) {
+          return {
+            ...prev,
+            imagePath: result.path,
+          };
+        }
+        return prev;
+      });
+    });
+
+    event.target.files = null;
+    event.target.value = "";
+  }
+
+  const modifyPath = async (path: string) => {
+    if (!product) {
+      return;
+    }
+    const a = await client.models.Product.update({
+      id: product.id,
+      imagePath: path,
+    });
+    console.log("modify path: ", a);
+  };
+
   const fetchProduct = async () => {
+    if (id) {
+      const { data: item } = await client.models.Product.get({
+        id: id,
+      });
+      if (!item) {
+        console.error("Product not found");
+        setProduct(undefined);
+        return;
+      }
+      setProduct(item);
+      return;
+    }
     const { data: items } = await client.models.Product.list();
     console.log(items);
     const num = Math.floor(Math.random() * items.length);
     setProduct(items[num]);
   };
 
-  function generateRandomWords() {
-    const words = [
-      "lorem",
-      "ipsum",
-      "dolor",
-      "sit",
-      "amet",
-      "consectetur",
-      "adipiscing",
-      "elit",
-      "sed",
-      "do",
-      "eiusmod",
-      "tempor",
-      "incididunt",
-      "ut",
-      "labore",
-      "et",
-      "dolore",
-      "magna",
-      "aliqua",
-      "ut",
-      "enim",
-      "ad",
-      "minim",
-      "veniam",
-      "quis",
-      "nostrud",
-      "exercitation",
-      "ullamco",
-      "laboris",
-      "nisi",
-      "ut",
-      "aliquip",
-      "ex",
-      "ea",
-      "commodo",
-      "consequat",
-      "duis",
-      "aute",
-      "irure",
-      "dolor",
-      "in",
-      "reprehenderit",
-      "in",
-      "voluptate",
-      "velit",
-      "esse",
-      "cillum",
-      "dolore",
-      "eu",
-      "fugiat",
-      "nulla",
-      "pariatur",
-      "excepteur",
-      "sint",
-      "occaecat",
-      "cupidatat",
-      "non",
-      "proident",
-      "sunt",
-      "in",
-      "culpa",
-      "qui",
-      "officia",
-      "deserunt",
-      "mollit",
-      "anim",
-      "id",
-      "est",
-    ];
-    return words[Math.floor(Math.random() * words.length)];
-  }
-
-  function generateRandomParagraph(words: number) {
-    let paragraph = "";
-    for (let i = 0; i < words; i++) {
-      paragraph += generateRandomWords() + " ";
-    }
-    return paragraph;
-  }
-
-  function randInt(min: number, max: number) {
-    return Math.floor(Math.random() * (max - min + 1) + min);
-  }
-
   const createProduct = async () => {
-    const letter = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
-    const a = await client.models.Product.create(
-      {
-        name: "New Product Type-" + letter[Math.floor(Math.random() * 26)],
-        price: randInt(100, 1000),
-        code:
-          "testCode-" +
-          letter[Math.floor(Math.random() * 26)] +
-          letter[Math.floor(Math.random() * 26)] +
-          letter[Math.floor(Math.random() * 26)],
-        version: "1." + Math.random().toFixed(3),
-        dimension:
-          randInt(10, 100) + "x" + randInt(10, 100) + "x" + randInt(10, 100),
-        description:
-          "This is a new product: " + generateRandomParagraph(randInt(30, 40)),
-        requirement:
-          "This is a requirement: " + generateRandomParagraph(randInt(10, 20)),
-        remark: "This is a remark: " + generateRandomParagraph(randInt(15, 30)),
-      },
-      {
-        authMode: "userPool",
-      }
-    );
-    console.log(a);
+    const newProduct = generateRandomProduct();
+    const a = await client.models.Product.create({
+      ...newProduct,
+    });
+    console.log("createProduct: ", a);
+    setProduct(a.data ?? undefined);
   };
 
   const switchProduct = async () => {
@@ -137,12 +109,21 @@ function ProductDetails() {
 
   const deleteProduct = async () => {
     if (product) {
+      if (product.imagePath) {
+        remove({
+          path: product.imagePath,
+        }).then((result) => {
+          console.log("delete image result: ", result);
+        });
+      }
+
       const a = await client.models.Product.delete({
         id: product.id,
       });
-      console.log(a);
+      console.log("deleted:", a);
       setProduct(undefined);
     }
+    switchProduct();
   };
 
   useEffect(() => {
@@ -154,8 +135,8 @@ function ProductDetails() {
       <BreadCrumps page="product-details" title="Product Details" />
       <section className="productDetail-wrapper">
         <div className="grid-col">
-          <h1>{product?.name ?? "No Product Info Found :("}</h1>
-          {product && (
+          <h1>{product?.name ?? "Loading..."}</h1>
+          {product ? (
             <>
               <p>
                 {product?.code} version - {product?.version}
@@ -181,30 +162,67 @@ function ProductDetails() {
                 <p>{product?.remark}</p>
               </div>{" "}
             </>
+          ) : (
+            <Loader
+              size="large"
+              variation="linear"
+              style={{
+                marginTop: "2rem",
+              }}
+            />
           )}
         </div>
         <div className="grid-col">
-          <img src="https://placehold.co/400x300" alt="" />
-          <Button
-            className="detail-btn"
-            onClick={createProduct}
-            colorTheme="success"
-          >
-            Create a new Product
-          </Button>
-          <Button className="detail-btn" onClick={switchProduct}>
-            Switch to a different Product
-          </Button>
-          <Button
-            className="detail-btn"
-            onClick={deleteProduct}
-            colorTheme="error"
-            variation="primary"
-          >
-            Delete this Product
-          </Button>
+          {product?.imagePath ? (
+            <StorageImage
+              path={product.imagePath}
+              alt="Product Image"
+              onGetUrlError={(e) => {
+                console.log(e);
+              }}
+            ></StorageImage>
+          ) : (
+            <img src="https://placehold.co/400x300" alt="Product Placeholder" />
+          )}
+          {authStatus === "authenticated" && (
+            <div className="detail-btn">
+              <span>Upload Product Image</span>
+              <Input
+                type="file"
+                accept="image/jpeg, image/png"
+                onChange={handelFileChange}
+                placeholder="hihi"
+                variation="quiet"
+              ></Input>
+            </div>
+          )}
+          {authStatus === "authenticated" && !id && (
+            <Button
+              className="detail-btn"
+              onClick={createProduct}
+              colorTheme="success"
+            >
+              Create a new Product
+            </Button>
+          )}
+          {!id && (
+            <Button className="detail-btn" onClick={switchProduct}>
+              Switch to a different Product
+            </Button>
+          )}
+          {authStatus === "authenticated" && (
+            <Button
+              className="detail-btn"
+              onClick={deleteProduct}
+              colorTheme="error"
+              variation="primary"
+            >
+              Delete this Product
+            </Button>
+          )}
         </div>
       </section>
+      <p className="id">{product?.id}</p>
     </>
   );
 }

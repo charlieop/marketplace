@@ -11,6 +11,7 @@ const schema = a.schema({
       remark: a.string(),
       price: a.float(), // price in HKdollars
       requirement: a.string(),
+      imagePath: a.string(),
     })
     .authorization((allow) => [
       allow.guest().to(["read"]),
