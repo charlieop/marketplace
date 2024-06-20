@@ -1,7 +1,7 @@
 import BreadCrumps from "../components/BreadCrumps.tsx";
 import ProductCard from "../components/ProductCard.tsx";
 import { useState, useEffect } from "react";
-import type { Schema } from "../../amplify/data/resource";
+import { type Schema } from "../../amplify/data/resource";
 import { generateClient } from "aws-amplify/data";
 import { Loader } from "@aws-amplify/ui-react";
 
@@ -12,37 +12,60 @@ interface Product {
   imagePath?: string | null;
 }
 
-const randomProduct = {
-  name: "View Random Product",
-  id: "random",
-  price: 0,
-};
-
 const client = generateClient<Schema>();
 
 function Products() {
   const [productList, setProductList] = useState<Product[]>([]);
+  let nextToken: string | null | undefined = null;
 
-  const fetchProduct = async () => {
-    const { data: items } = await client.models.Product.list({
+  const observer = new IntersectionObserver(
+    (entries) => {
+      if (entries[0].isIntersecting) {
+        if (nextToken) {
+          fetchProduct(nextToken);
+        }
+      }
+    },
+    { threshold: 0.5, rootMargin: "0px 0px 400px 0px" }
+  );
+
+
+  const fetchProduct = async (tk?: string | null | undefined) => {
+    const { data: items, nextToken: token } = await client.models.Product.list({
       selectionSet: ["name", "id", "imagePath", "price"],
+      limit: 9,
+      nextToken: tk,
     });
-    console.log(items);
+    nextToken = token;
+    if (!token) {
+      console.log("stop observer");
+      document.getElementById("products-loader")?.remove();
+      observer.disconnect();
+    }
 
-    setProductList([randomProduct, ...items]);
+    setProductList((prevList) => [...prevList, ...items]);
   };
+
+  function startObserver() {
+    const productsLoader = document.getElementById("products-loader");
+    if (!productsLoader) return;
+    console.log("start observer");
+    observer.observe(productsLoader);
+  }
 
   useEffect(() => {
     fetchProduct();
+    startObserver();
   }, []);
 
   return (
     <div>
-      <BreadCrumps page="Products" title="All Pourses" />
+      <BreadCrumps page="Products" title="All Products" />
       <section className="products">
         <div className="blog pb-5" id="products">
           <div className="container py-lg-5 py-md-4 py-2">
-            {productList.length === 0 ? (
+            {nextToken}
+            {productList.length === -1 ? (
               <Loader
                 size="large"
                 style={{
@@ -59,42 +82,19 @@ function Products() {
                 <ProductCard product={product} key={index} />
               ))}
             </div>
-            {/* pagination */}
-            <div className="pagination-wrapper mt-5 pt-lg-3 text-center">
-              <ul className="page-pagination">
-                <li>
-                  <a className="next" href="#url">
-                    <span className="fa fa-angle-left"></span> Prev
-                  </a>
-                </li>
-                <li>
-                  <span aria-current="page" className="page-numbers current">
-                    1
-                  </span>
-                </li>
-                <li>
-                  <a className="page-numbers" href="#url">
-                    2
-                  </a>
-                </li>
-                <li>
-                  <a className="page-numbers" href="#url">
-                    3
-                  </a>
-                </li>
-                <li>
-                  <a className="page-numbers" href="#url">
-                    ....
-                  </a>
-                </li>
-                <li>
-                  <a className="next" href="#url">
-                    Next <span className="fa fa-angle-right"></span>
-                  </a>
-                </li>
-              </ul>
-            </div>
-            {/* //pagination */}
+            {true && (
+              <Loader
+                size="large"
+                id="products-loader"
+                style={{
+                  marginTop: "10rem",
+                  marginInline: "auto",
+                  marginBottom: "10svh",
+                  display: "block",
+                  width: "5rem",
+                }}
+              />
+            )}
           </div>
         </div>
       </section>

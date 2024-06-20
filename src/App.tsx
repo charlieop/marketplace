@@ -76,6 +76,7 @@ function App() {
               </HeaderFooterWrapper>
             }
           />
+
           <Route
             path="/product-details"
             element={
