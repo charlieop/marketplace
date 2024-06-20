@@ -29,7 +29,7 @@ function Home() {
                           </p>
                           <Link
                             className="btn btn-style btn-primary mt-sm-5 mt-4 mr-2"
-                            to="product-list"
+                            to="products"
                           >
                             View the Product
                           </Link>
@@ -51,7 +51,7 @@ function Home() {
                           </p>
                           <Link
                             className="btn btn-style btn-primary mt-sm-5 mt-4 mr-2"
-                            to="product-list"
+                            to="products"
                           >
                             View the Product
                           </Link>
@@ -74,7 +74,7 @@ function Home() {
                           </p>
                           <Link
                             className="btn btn-style btn-primary mt-sm-5 mt-4 mr-2"
-                            to="product-list"
+                            to="products"
                           >
                             View the Product
                           </Link>
@@ -100,7 +100,7 @@ function Home() {
                           </p>
                           <Link
                             className="btn btn-style btn-primary mt-sm-5 mt-4 mr-2"
-                            to="product-list"
+                            to="products"
                           >
                             View the Product
                           </Link>
@@ -157,9 +157,9 @@ function Home() {
               Featured Selected <span>Products</span>
             </h3>
             <div className="row">
+              {/* <ProductCard />
               <ProductCard />
-              <ProductCard />
-              <ProductCard />
+              <ProductCard /> */}
             </div>
             <div className="mt-5 text-more">
               <p className="pt-md-3 sample text-center">

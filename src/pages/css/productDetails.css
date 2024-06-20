@@ -6,32 +6,32 @@
   gap: 1rem;
 }
 
-.grid-col {
+.productDetail-wrapper .grid-col {
   display: flex;
   flex-direction: column;
   padding-inline: 1rem;
 }
 
-.group {
+.productDetail-wrapper .group {
   padding: 1rem;
 }
 
-p {
+.productDetail-wrapper p {
   margin-left: 0.5rem;
 }
 
-h1 {
+.productDetail-wrapper h1 {
   font-size: 3rem;
 }
 
-img {
+.productDetail-wrapper img {
   margin-top: 2rem;
 }
 
-.detail-btn {
+.productDetail-wrapper .detail-btn {
   margin-top: 1rem;
 }
 
-span {
+.productDetail-wrapper span {
   font-size: 0.75rem;
 }

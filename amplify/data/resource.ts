@@ -9,7 +9,7 @@ const schema = a.schema({
       description: a.string(),
       dimension: a.string(),
       remark: a.string(),
-      price: a.float(), // price in HKdollars
+      price: a.float().required(), // price in HKdollars
       requirement: a.string(),
       imagePath: a.string(),
     })

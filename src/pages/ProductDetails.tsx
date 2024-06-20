@@ -84,6 +84,7 @@ function ProductDetails() {
       if (!item) {
         console.error("Product not found");
         setProduct(undefined);
+        navigate("/products");
         return;
       }
       setProduct(item);
@@ -127,7 +128,7 @@ function ProductDetails() {
       console.log("deleted:", a);
       setProduct(undefined);
     }
-    navigate("/product-list");
+    navigate("/products");
   };
 
   useEffect(() => {
@@ -203,7 +204,7 @@ function ProductDetails() {
           <Button
             className="detail-btn"
             onClick={() => {
-              navigate("/product-list");
+              navigate("/products");
             }}
             variation="primary"
           >
