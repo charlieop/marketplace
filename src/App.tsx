@@ -8,7 +8,7 @@ import HeaderFooterWrapper from "./components/HeaderFooterWrapper.tsx";
 
 import About from "./pages/About.tsx";
 import Contact from "./pages/Contact.tsx";
-import Courses from "./pages/Courses.tsx";
+import Products from "./pages/Products.tsx";
 import Home from "./pages/Home.tsx";
 import Login from "./pages/Login.tsx";
 import ProductList from "./pages/ProductList.tsx";
@@ -54,10 +54,10 @@ function App() {
             }
           />
           <Route
-            path="/courses"
+            path="/products"
             element={
               <HeaderFooterWrapper>
-                <Courses />
+                <Products />
               </HeaderFooterWrapper>
             }
           />

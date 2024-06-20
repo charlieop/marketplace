@@ -84,8 +84,8 @@ function Header() {
                   </Link>
                 </li>
                 <li className="nav-item @@courses__active">
-                  <Link className="nav-link" to="/courses">
-                    Courses
+                  <Link className="nav-link" to="/products">
+                    Products
                   </Link>
                 </li>
                 <li className="nav-item @@contact__active">

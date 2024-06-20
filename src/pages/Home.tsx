@@ -1,4 +1,6 @@
 import "./css/home.css";
+import ProductCard from "../components/ProductCard.tsx";
+
 import { next, prev } from "../assets/utils/carousel.ts";
 import { Link } from "react-router-dom";
 
@@ -145,7 +147,7 @@ function Home() {
         </div>
       </section>
       {/* /main-slider */}
-      <section className="w3l-Products">
+      <section className="products">
         <div className="blog pb-5" id="Products">
           <div className="container py-lg-5 py-md-4 py-2">
             <h5 className="title-small text-center mb-1">
@@ -155,231 +157,16 @@ function Home() {
               Featured Selected <span>Products</span>
             </h3>
             <div className="row">
-              <div className="col-lg-4 col-md-6 item">
-                <div className="card">
-                  <div className="card-header p-0 position-relative">
-                    <a href="#course-single" className="zoom d-block">
-                      <img
-                        className="card-img-bottom d-block"
-                        src="assets/images/c1.jpg"
-                        alt="Card cap"
-                      />
-                    </a>
-                    <div className="course-price-badge"> New</div>
-                    <div className="post-pos">
-                      <a href="#reciepe" className="receipe blue">
-                        Sportopia selected
-                      </a>
-                    </div>
-                  </div>
-                  <div className="card-body course-details">
-                    <div className="price-review d-flex justify-content-between mb-1align-items-center">
-                      <p>$35000.00</p>
-                      <ul className="rating-star">
-                        <li>
-                          <span className="fa fa-star"></span>
-                        </li>
-                        <li>
-                          <span className="fa fa-star"></span>
-                        </li>
-                        <li>
-                          <span className="fa fa-star"></span>
-                        </li>
-                        <li>
-                          <span className="fa fa-star"></span>
-                        </li>
-                        <li>
-                          <span className="fa fa-star-o"></span>
-                        </li>
-                      </ul>
-                    </div>
-                    <a href="#course-single" className="course-desc">
-                      Smart Mobifitness Commercial Rower
-                    </a>
-                    <div className="course-meta mt-4">
-                      <div className="meta-item course-lesson">
-                        <span className="fa fa-clock-o"></span>
-                        <span className="meta-value"> sales left 20 hrs </span>
-                      </div>
-                      <div className="meta-item course-">
-                        <span className="fa fa-user-o"></span>
-                        <span className="meta-value"> 389 </span>
-                      </div>
-                    </div>
-                  </div>
-                  <div className="card-footer">
-                    <div className="author align-items-center">
-                      <img
-                        src="assets/images/a1.jpg"
-                        alt=""
-                        className="img-fluid rounded-circle"
-                      />
-                      <ul className="blog-meta">
-                        <li>
-                          <span className="meta-value mx-1">by</span>{" "}
-                          <a href="#author"> Timezone</a>
-                        </li>
-                        <li>
-                          <span className="meta-value mx-1">in</span>{" "}
-                          <a href="#author"> Singapore</a>
-                        </li>
-                      </ul>
-                    </div>
-                  </div>
-                </div>
-              </div>
-
-              <div className="col-lg-4 col-md-6 item mt-md-0 mt-5">
-                <div className="card">
-                  <div className="card-header p-0 position-relative">
-                    <a href="#course-single" className="zoom d-block">
-                      <img
-                        className="card-img-bottom d-block"
-                        src="assets/images/c5.jpg"
-                        alt="Card cap"
-                      />
-                    </a>
-                    <div className="course-price-badge"> New</div>
-                    <div className="post-pos">
-                      <a href="#reciepe" className="receipe blue">
-                        Sportopia selected
-                      </a>
-                    </div>
-                  </div>
-                  <div className="card-body course-details">
-                    <div className="price-review d-flex justify-content-between mb-1align-items-center">
-                      <p>$230000.00</p>
-                      <ul className="rating-star">
-                        <li>
-                          <span className="fa fa-star"></span>
-                        </li>
-                        <li>
-                          <span className="fa fa-star"></span>
-                        </li>
-                        <li>
-                          <span className="fa fa-star"></span>
-                        </li>
-                        <li>
-                          <span className="fa fa-star"></span>
-                        </li>
-                        <li>
-                          <span className="fa fa-star-o"></span>
-                        </li>
-                      </ul>
-                    </div>
-                    <a href="#course-single" className="course-desc">
-                      LReax Free Weight Area – Fluikettle Author
-                    </a>
-                    <div className="course-meta mt-4">
-                      <div className="meta-item course-lesson">
-                        <span className="fa fa-clock-o"></span>
-                        <span className="meta-value"> Sales left 49 hrs </span>
-                      </div>
-                      <div className="meta-item course-">
-                        <span className="fa fa-user-o"></span>
-                        <span className="meta-value"> 388 </span>
-                      </div>
-                    </div>
-                  </div>
-                  <div className="card-footer">
-                    <div className="author align-items-center">
-                      <img
-                        src="assets/images/a2.jpg"
-                        alt=""
-                        className="img-fluid rounded-circle"
-                      />
-                      <ul className="blog-meta">
-                        <li>
-                          <span className="meta-value mx-1">by</span>{" "}
-                          <a href="#author"> Skyzone</a>
-                        </li>
-                        <li>
-                          <span className="meta-value mx-1">in</span>{" "}
-                          <a href="#author"> Münster</a>
-                        </li>
-                      </ul>
-                    </div>
-                  </div>
-                </div>
-              </div>
-
-              <div className="col-lg-4 col-md-6 item mt-lg-0 mt-5">
-                <div className="card">
-                  <div className="card-header p-0 position-relative">
-                    <a href="#course-single" className="zoom d-block">
-                      <img
-                        className="card-img-bottom d-block"
-                        src="assets/images/c6.jpg"
-                        alt="Card cap"
-                      />
-                    </a>
-                    <div className="course-price-badge-new"> New</div>
-                  </div>
-                  <div className="card-body course-details">
-                    <div className="price-review d-flex justify-content-between mb-1align-items-center">
-                      <p>$49.00</p>
-                      <ul className="rating-star">
-                        <li>
-                          <span className="fa fa-star"></span>
-                        </li>
-                        <li>
-                          <span className="fa fa-star"></span>
-                        </li>
-                        <li>
-                          <span className="fa fa-star"></span>
-                        </li>
-                        <li>
-                          <span className="fa fa-star"></span>
-                        </li>
-                        <li>
-                          <span className="fa fa-star-o"></span>
-                        </li>
-                      </ul>
-                    </div>
-                    <a href="#course-single" className="course-desc">
-                      Battle Kart
-                    </a>
-                    <div className="course-meta mt-4">
-                      <div className="meta-item course-lesson">
-                        <span className="fa fa-clock-o"></span>
-                        <span className="meta-value"> Sales letf 2 hrs </span>
-                      </div>
-                      <div className="meta-item course-">
-                        <span className="fa fa-user-o"></span>
-                        <span className="meta-value"> 88 </span>
-                      </div>
-                    </div>
-                  </div>
-                  <div className="card-footer">
-                    <div className="author align-items-center">
-                      <img
-                        src="assets/images/a4.jpg"
-                        alt=""
-                        className="img-fluid rounded-circle"
-                      />
-                      <ul className="blog-meta">
-                        <li>
-                          <span className="meta-value mx-1">by</span>{" "}
-                          <a href="#author"> William</a>
-                        </li>
-                        <li>
-                          <span className="meta-value mx-1">in</span>{" "}
-                          <a href="#author"> Hong Kong</a>
-                        </li>
-                      </ul>
-                    </div>
-                  </div>
-                </div>
-              </div>
+              <ProductCard />
+              <ProductCard />
+              <ProductCard />
             </div>
             <div className="mt-5 text-more">
               <p className="pt-md-3 sample text-center">
-                Control your personal preference settings to get notified about
-                appropriate Products
-                <a href="Products.html">
+                <Link to="products">
                   View All Products{" "}
                   <span className="pl-2 fa fa-long-arrow-right"></span>
-                </a>
+                </Link>
               </p>
             </div>
           </div>
