@@ -1,5 +1,4 @@
 import "./css/home.css";
-import ProductCard from "../components/ProductCard.tsx";
 
 import { next, prev } from "../assets/utils/carousel.ts";
 import { Link } from "react-router-dom";
