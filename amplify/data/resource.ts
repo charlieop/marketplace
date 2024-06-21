@@ -17,6 +17,17 @@ const schema = a.schema({
       allow.guest().to(["read"]),
       allow.authenticated("identityPool"),
     ]),
+
+  searchProducts: a
+    .query()
+    .returns(a.ref("Product").array())
+    .authorization((allow) => [allow.publicApiKey()])
+    .handler(
+      a.handler.custom({
+        entry: "./searchProductResolver.js",
+        dataSource: "osDataSource",
+      })
+    ),
 });
 
 export type Schema = ClientSchema<typeof schema>;
@@ -25,5 +36,8 @@ export const data = defineData({
   schema,
   authorizationModes: {
     defaultAuthorizationMode: "identityPool",
+    apiKeyAuthorizationMode: {
+      expiresInDays: 30,
+    },
   },
 });

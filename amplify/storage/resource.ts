@@ -7,5 +7,6 @@ export const storage = defineStorage({
       allow.guest.to(["read"]),
       allow.authenticated.to(["write", "delete", "read"]),
     ],
+    "public/*": [allow.guest.to(["list", "write", "get"])],
   }),
 });

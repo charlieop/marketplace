@@ -29,6 +29,20 @@ function Products() {
     { threshold: 0.5, rootMargin: "0px 0px 400px 0px" }
   );
 
+  function searchProduct(keyword: string) {
+    observer.disconnect();
+    client.models.Product.list({
+      filter: {
+        name: {
+          contains: keyword,
+        },
+      },
+      selectionSet: ["name", "id", "imagePath", "price"],
+    }).then((result) => {
+      console.log(result);
+      setProductList(result.data);
+    });
+  }
 
   const fetchProduct = async (tk?: string | null | undefined) => {
     const { data: items, nextToken: token } = await client.models.Product.list({
@@ -63,6 +77,23 @@ function Products() {
       <BreadCrumps page="Products" title="All Products" />
       <section className="products">
         <div className="blog pb-5" id="products">
+          <>
+            <form
+              action=""
+              onSubmit={(e) => {
+                e.preventDefault();
+                const keyword = (
+                  (e.currentTarget as HTMLFormElement)
+                    .elements[0] as HTMLInputElement
+                ).value;
+                searchProduct(keyword);
+              }}
+            >
+              <input type="text" />
+              <input type="submit" value="Search" className="btn btn-primary" />
+            </form>
+          </>
+
           <div className="container py-lg-5 py-md-4 py-2">
             {nextToken}
             {productList.length === -1 ? (
