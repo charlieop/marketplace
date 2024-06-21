@@ -1,64 +1,41 @@
 import BreadCrumps from "../components/BreadCrumps.tsx";
 import ProductCard from "../components/ProductCard.tsx";
 import { useState, useEffect } from "react";
-import { type Schema } from "../../amplify/data/resource";
-import { generateClient } from "aws-amplify/data";
+import {
+  // client,
+  Product,
+  fetchProductPromise,
+  searchProductByNamePromise,
+} from "../assets/utils/product-backend.ts";
 import { Loader } from "@aws-amplify/ui-react";
 
-interface Product {
-  name: string;
-  id: string;
-  price: number;
-  imagePath?: string | null;
-}
-
-const client = generateClient<Schema>();
+const fetchLimit = 9;
+let nextToken: string | null | undefined = null;
 
 function Products() {
   const [productList, setProductList] = useState<Product[]>([]);
-  let nextToken: string | null | undefined = null;
 
   const observer = new IntersectionObserver(
     (entries) => {
       if (entries[0].isIntersecting) {
         if (nextToken) {
-          fetchProduct(nextToken);
+          console.log("fetching more products");
+          fetchProductPromise(fetchLimit, nextToken).then((res) => {
+            console.log(res);
+            setProductList((prev) => [...prev, ...res.data]);
+            nextToken = res.nextToken;
+
+            if (!nextToken) {
+              console.log("no more products to fetch");
+              observer.unobserve(entries[0].target);
+              entries[0].target.remove();
+            }
+          });
         }
       }
     },
     { threshold: 0.5, rootMargin: "0px 0px 400px 0px" }
   );
-
-  function searchProduct(keyword: string) {
-    observer.disconnect();
-    client.models.Product.list({
-      filter: {
-        name: {
-          contains: keyword,
-        },
-      },
-      selectionSet: ["name", "id", "imagePath", "price"],
-    }).then((result) => {
-      console.log(result);
-      setProductList(result.data);
-    });
-  }
-
-  const fetchProduct = async (tk?: string | null | undefined) => {
-    const { data: items, nextToken: token } = await client.models.Product.list({
-      selectionSet: ["name", "id", "imagePath", "price"],
-      limit: 9,
-      nextToken: tk,
-    });
-    nextToken = token;
-    if (!token) {
-      console.log("stop observer");
-      document.getElementById("products-loader")?.remove();
-      observer.disconnect();
-    }
-
-    setProductList((prevList) => [...prevList, ...items]);
-  };
 
   function startObserver() {
     const productsLoader = document.getElementById("products-loader");
@@ -67,23 +44,27 @@ function Products() {
     observer.observe(productsLoader);
   }
 
-  function testOpenSearch() {
-    client.queries
-      .searchProducts({
-        authMode: "apiKey",
-      })
-      .then((result) => {
-        console.log(result);
-      })
-      .catch((error) => {
-        console.log(error);
-      });
-  }
+  // function testOpenSearch() {
+  //   client.queries
+  //     .searchProducts({
+  //       authMode: "apiKey",
+  //     })
+  //     .then((result) => {
+  //       console.log(result);
+  //     })
+  //     .catch((error) => {
+  //       console.log(error);
+  //     });
+  // }
 
   useEffect(() => {
-    fetchProduct();
-    startObserver();
-    testOpenSearch();
+    fetchProductPromise(fetchLimit).then((res) => {
+      console.log(res);
+      setProductList(res.data);
+      nextToken = res.nextToken;
+      startObserver();
+    });
+    // testOpenSearch();
   }, []);
 
   return (
@@ -96,20 +77,23 @@ function Products() {
               action=""
               onSubmit={(e) => {
                 e.preventDefault();
+                document.getElementById("products-loader")?.remove();
                 const keyword = (
                   (e.currentTarget as HTMLFormElement)
                     .elements[0] as HTMLInputElement
                 ).value;
-                searchProduct(keyword);
+                searchProductByNamePromise(keyword).then((res) => {
+                  console.log(res);
+                  setProductList(res.data);
+                });
               }}
             >
-              <input type="text" />
+              <input type="text" required />
               <input type="submit" value="Search" className="btn btn-primary" />
             </form>
           </>
 
           <div className="container py-lg-5 py-md-4 py-2">
-            {nextToken}
             {productList.length === -1 ? (
               <Loader
                 size="large"
