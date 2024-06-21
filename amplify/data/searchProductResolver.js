@@ -9,7 +9,13 @@ import { util } from "@aws-appsync/utils";
 export function request(ctx) {
   return {
     operation: "GET",
-    path: "/todo/_search",
+    path: "/products/_search",
+    params: {
+      body: {
+        from: 0,
+        size: 10,
+      },
+    },
   };
 }
 

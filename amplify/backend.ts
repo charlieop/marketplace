@@ -13,6 +13,7 @@ import * as logs from "aws-cdk-lib/aws-logs";
 import { RemovalPolicy } from "aws-cdk-lib";
 
 import { Stack } from "aws-cdk-lib";
+import { CfnIdentityPool } from "aws-cdk-lib/aws-cognito";
 
 /**
  * @see https://docs.amplify.aws/react/build-a-backend/ to add storage, functions, and more
@@ -39,10 +40,8 @@ if (Array.isArray(cfnUserPool.schema)) {
 // setup search for products
 const productTable =
   backend.data.resources.cfnResources.amplifyDynamoDbTables["Product"];
-
 // Update table settings
 productTable.pointInTimeRecoveryEnabled = true;
-
 productTable.streamSpecification = {
   streamViewType: dynamodb.StreamViewType.NEW_IMAGE,
 };
@@ -68,7 +67,6 @@ const openSearchDomain = new opensearch.Domain(dataStack, "OpenSearchDomain", {
 const s3BucketArn = backend.storage.resources.bucket.bucketArn;
 // Get the S3Bucket Name
 const s3BucketName = backend.storage.resources.bucket.bucketName;
-
 //Get the region
 const region = dataStack.region;
 
@@ -145,7 +143,7 @@ const indexMapping = {
         type: "keyword",
       },
       code: {
-        type: "keyword",
+        type: "text",
       },
       name: {
         type: "text",
@@ -193,11 +191,13 @@ dynamodb-pipeline:
           region: "${region}"
 `;
 
-// Create a CloudWatch log group
-const logGroup = new logs.LogGroup(dataStack, "LogGroup", {
-  logGroupName: "/aws/vended-logs/OpenSearchService/pipelines/1",
-  removalPolicy: RemovalPolicy.DESTROY,
-});
+// // NOTICE: This block of code is commented out because it causes the deployment to fail
+// // Create a CloudWatch log group
+// const logGroup = new logs.LogGroup(dataStack, "LogGroup", {
+//   logGroupName: "/aws/vended-logs/OpenSearchService/pipelines/1",
+//   removalPolicy: RemovalPolicy.DESTROY,
+// });
+// // Comment END
 
 // Create an OpenSearch Integration Service pipeline
 const cfnPipeline = new osis.CfnPipeline(
@@ -208,12 +208,14 @@ const cfnPipeline = new osis.CfnPipeline(
     minUnits: 1,
     pipelineConfigurationBody: openSearchTemplate,
     pipelineName: "dynamodb-integration-2",
-    logPublishingOptions: {
-      isLoggingEnabled: true,
-      cloudWatchLogDestination: {
-        logGroup: logGroup.logGroupName,
-      },
-    },
+    // // NOTICE: This block of code is commented out because it causes the deployment to fail
+    // logPublishingOptions: {
+    //   isLoggingEnabled: true,
+    //   cloudWatchLogDestination: {
+    //     logGroup: logGroup.logGroupName,
+    //   },
+    // },
+    // Comment END
   }
 );
 

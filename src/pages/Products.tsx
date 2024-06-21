@@ -67,9 +67,23 @@ function Products() {
     observer.observe(productsLoader);
   }
 
+  function testOpenSearch() {
+    client.queries
+      .searchProducts({
+        authMode: "apiKey",
+      })
+      .then((result) => {
+        console.log(result);
+      })
+      .catch((error) => {
+        console.log(error);
+      });
+  }
+
   useEffect(() => {
     fetchProduct();
     startObserver();
+    testOpenSearch();
   }, []);
 
   return (

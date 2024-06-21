@@ -16,6 +16,7 @@ const schema = a.schema({
     .authorization((allow) => [
       allow.guest().to(["read"]),
       allow.authenticated("identityPool"),
+      allow.publicApiKey(),
     ]),
 
   searchProducts: a
@@ -26,6 +27,7 @@ const schema = a.schema({
       a.handler.custom({
         entry: "./searchProductResolver.js",
         dataSource: "osDataSource",
+        // dataSource: a.ref("Product"),
       })
     ),
 });
