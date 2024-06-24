@@ -18,6 +18,9 @@ export function generateRandomProduct() {
     requirement:
       "This is a requirement: " + generateRandomParagraph(randInt(10, 20)),
     remark: "This is a remark: " + generateRandomParagraph(randInt(15, 30)),
+    id: "null",
+    createdAt: "",
+    updatedAt: "",
   };
   return product;
 }

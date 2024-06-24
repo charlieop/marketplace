@@ -94,6 +94,14 @@ function App() {
               }
             />
             <Route
+              path="/product-details/new"
+              element={
+                <HeaderFooterWrapper>
+                  <ProductDetails />
+                </HeaderFooterWrapper>
+              }
+            />
+            <Route
               path=":id"
               element={
                 <HeaderFooterWrapper>

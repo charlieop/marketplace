@@ -35,3 +35,7 @@
 .productDetail-wrapper span {
   font-size: 0.75rem;
 }
+
+.productDetail-wrapper .input-group {
+  margin-bottom: 1.5rem;
+}
