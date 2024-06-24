@@ -44,6 +44,7 @@ function Products() {
     observer.observe(productsLoader);
   }
 
+  // Removed OpenSearch integration
   // function testOpenSearch() {
   //   client.queries
   //     .searchProducts({
@@ -64,7 +65,6 @@ function Products() {
       nextToken = res.nextToken;
       startObserver();
     });
-    // testOpenSearch();
   }, []);
 
   return (

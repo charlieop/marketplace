@@ -19,17 +19,18 @@ const schema = a.schema({
       allow.publicApiKey(),
     ]),
 
-  searchProducts: a
-    .query()
-    .returns(a.ref("Product").array())
-    .authorization((allow) => [allow.publicApiKey()])
-    .handler(
-      a.handler.custom({
-        entry: "./searchProductResolver.js",
-        dataSource: "osDataSource",
-        // dataSource: a.ref("Product"),
-      })
-    ),
+  // This is for useing OpenSearch
+  // searchProducts: a
+  //   .query()
+  //   .returns(a.ref("Product").array())
+  //   .authorization((allow) => [allow.publicApiKey()])
+  //   .handler(
+  //     a.handler.custom({
+  //       entry: "./searchProductResolver.js",
+  //       dataSource: "osDataSource",
+  //       // dataSource: a.ref("Product"),
+  //     })
+  //   ),
 });
 
 export type Schema = ClientSchema<typeof schema>;
