@@ -23,6 +23,7 @@ import {
   uploadImage,
   updateProduct,
   deleteProduct,
+  modifyImgPath,
 } from "../assets/utils/product-backend";
 
 function ProductDetails() {
@@ -47,11 +48,10 @@ function ProductDetails() {
       return;
     }
     setImg(file);
-    event.target.files = null;
-    event.target.value = "";
   }
 
   async function handleCommit() {
+    const product = updateProductFromForm();
     if (!product) {
       console.error("Product not found");
       return;
@@ -61,8 +61,18 @@ function ProductDetails() {
         console.log("createProduct: ", res);
         if (res.data) {
           if (img) {
+            const resProduct = res.data;
             uploadImage(res.data.id, img).then((res) => {
               console.log("uploadImage: ", res);
+              setProduct((prev) => {
+                if (prev) {
+                  prev.imagePath = res.path;
+                }
+                return prev;
+              });
+              modifyImgPath(resProduct, res.path).then((res) => {
+                console.log("modifyImgPath: ", res);
+              });
               setImg(null);
             });
           }
@@ -76,6 +86,15 @@ function ProductDetails() {
       if (img) {
         await uploadImage(product.id, img).then((res) => {
           console.log("uploadImage: ", res);
+          setProduct((prev) => {
+            if (prev) {
+              prev.imagePath = res.path;
+            }
+            return prev;
+          });
+          modifyImgPath(product, res.path).then((res) => {
+            console.log("modifyImgPath: ", res);
+          });
           setImg(null);
         });
       }
@@ -128,6 +147,39 @@ function ProductDetails() {
     }
   }
 
+  function updateProductFromForm() {
+    const form = document.querySelector(
+      "#product-info-form"
+    ) as HTMLFormElement;
+    if (!form) {
+      console.error("Form not found");
+      return;
+    }
+    const formData = new FormData(form);
+    const data = Object.fromEntries(formData.entries());
+
+    if (!product) {
+      console.error("Product not found");
+      return;
+    }
+    const updatedProduct = {
+      name: data.name.toString(),
+      code: data.code.toString(),
+      version: data.version.toString(),
+      description: data.description.toString(),
+      requirement: data.requirement.toString(),
+      price: Number(data.price),
+      dimension: data.dimension.toString(),
+      remark: data.remark.toString(),
+      id: product.id,
+      imagePath: product.imagePath,
+      createdAt: product.createdAt,
+      updatedAt: product.updatedAt,
+    };
+    setProduct(updatedProduct);
+    return updatedProduct;
+  }
+
   useEffect(() => {
     window.scrollTo(0, 0);
     fetchProduct();
@@ -169,7 +221,7 @@ function ProductDetails() {
 
           {isModyfing && product && (
             <>
-              <form>
+              <form id="product-info-form">
                 <Flex className="input-group" direction="column" gap="small">
                   <Label htmlFor="name">
                     Product Name:
@@ -319,7 +371,10 @@ function ProductDetails() {
               className="detail-btn"
               colorTheme="success"
               variation="primary"
-              onClick={handleCommit}
+              type="submit"
+              onClick={() => {
+                handleCommit();
+              }}
             >
               Upload Change
             </Button>

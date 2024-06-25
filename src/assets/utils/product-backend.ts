@@ -28,48 +28,24 @@ export function uploadImage(productID: string, img: File) {
     },
   }).result;
   return res;
-  // res.then((result) => {
-  //   console.log("upload result: ", result);
-  //   modifyPath(result.path);
-  //   setImg(null);
-  //   setProduct((prev) => {
-  //     if (prev) {
-  //       return {
-  //         ...prev,
-  //         imagePath: result.path,
-  //       };
-  //     }
-  //     return prev;
-  //   });
-  // });
 }
 
-export function createProduct(
-  product: Omit<Product, "id" | "createdAt" | "updatedAt">
-) {
+export function createProduct(product: Product) {
   // drop id, createdAT, updatedAt
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  const { id, createdAt, updatedAt, ...rest } = product;
   return client.models.Product.create({
-    ...product,
+    ...rest,
   });
-  // .then((res) => {
-  //   console.log("createProduct: ", res);
-  //   if (res.data) {
-  //     navigate(`/product-details/${res.data.id}`);
-  //   }
-  //   setProduct(res.data ?? undefined);
-  // });
 }
 
-export function updateProduct(
-  product: Omit<Product, "createdAt" | "updatedAt">
-) {
+export function updateProduct(product: Product) {
+  // drop createdAT, updatedAt
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  const { createdAt, updatedAt, ...rest } = product;
   return client.models.Product.update({
-    ...product,
+    ...rest,
   });
-  // .then((res) => {
-  //   console.log("updateProduct: ", res);
-  //   setProduct(res.data ?? undefined);
-  // });
 }
 
 export function deleteProduct(productId: string, productImgPath?: string) {
@@ -81,17 +57,14 @@ export function deleteProduct(productId: string, productImgPath?: string) {
   return client.models.Product.delete({
     id: productId,
   });
-  //   .then((res) => {
-  //     console.log("deleted:", res);
-  //     setProduct(undefined);
-  //   });
-  // }
-  // navigate("/products");
 }
 
-export function modifyImgPath(productID: string, path: string) {
+export function modifyImgPath(product: Product, path: string) {
+  // drop id, createdAT, updatedAt
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  const { createdAt, updatedAt, imagePath, ...rest } = product;
   return client.models.Product.update({
-    id: productID,
+    ...rest,
     imagePath: path,
   });
 }

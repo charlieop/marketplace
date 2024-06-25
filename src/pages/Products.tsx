@@ -38,6 +38,10 @@ function Products() {
               entries[0].target.remove();
             }
           });
+        } else {
+          console.log("no more products to fetch");
+          observer.unobserve(entries[0].target);
+          entries[0].target.remove();
         }
       }
     },
