@@ -2,7 +2,6 @@ import { BrowserRouter, Routes, Route } from "react-router-dom";
 import { useEffect, useRef } from "react";
 
 import { next } from "./assets/utils/carousel.ts";
-import { startAuthListener } from "./assets/utils/userSession.ts";
 
 import HeaderFooterWrapper from "./components/HeaderFooterWrapper.tsx";
 
@@ -13,11 +12,10 @@ import Home from "./pages/Home.tsx";
 import Login from "./pages/Login.tsx";
 import ProductDetails from "./pages/ProductDetails.tsx";
 
-function App() {
-  const mounted = useRef(false);
+let mounted = false;
 
+function App() {
   function onMounted() {
-    startAuthListener();
     refresh();
     setInterval(() => {
       next();
@@ -34,10 +32,9 @@ function App() {
   }
 
   useEffect(() => {
-    if (!mounted.current) {
-      mounted.current = true;
-      onMounted();
-    }
+    if (mounted) return;
+    mounted = true;
+    onMounted();
   });
 
   return (

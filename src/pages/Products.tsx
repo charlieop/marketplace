@@ -1,48 +1,24 @@
 import BreadCrumps from "../components/BreadCrumps.tsx";
 import ProductCard from "../components/ProductCard.tsx";
 import { useState, useEffect } from "react";
-import { useAuthenticator } from "@aws-amplify/ui-react";
 import { useNavigate } from "react-router-dom";
 
-import {
-  // client,
-  Product,
-  fetchProductPromise,
-  searchProductByNamePromise,
-} from "../assets/utils/product-backend.ts";
-import { Loader } from "@aws-amplify/ui-react";
-
+import { generateRandomProduct } from "../assets/utils/generateRandomProduct.ts";
 import "./css/products.css";
 
-const fetchLimit = 9;
-let nextToken: string | null | undefined = null;
+let mounted = false;
 
 function Products() {
-  const [productList, setProductList] = useState<Product[]>([]);
-  const { authStatus } = useAuthenticator((context) => [context.authStatus]);
   const navigate = useNavigate();
+  const [authStatus, setAuthStatus] = useState("authenticated");
+  const [productList, setProductList] = useState([generateRandomProduct()]);
 
   const observer = new IntersectionObserver(
     (entries) => {
       if (entries[0].isIntersecting) {
-        if (nextToken) {
-          console.log("fetching more products");
-          fetchProductPromise(fetchLimit, nextToken).then((res) => {
-            console.log(res);
-            setProductList((prev) => [...prev, ...res.data]);
-            nextToken = res.nextToken;
-
-            if (!nextToken) {
-              console.log("no more products to fetch");
-              observer.unobserve(entries[0].target);
-              entries[0].target.remove();
-            }
-          });
-        } else {
-          console.log("no more products to fetch");
-          observer.unobserve(entries[0].target);
-          entries[0].target.remove();
-        }
+        console.log("no more products to fetch");
+        observer.unobserve(entries[0].target);
+        entries[0].target.remove();
       }
     },
     { threshold: 0.5, rootMargin: "0px 0px 400px 0px" }
@@ -55,27 +31,13 @@ function Products() {
     observer.observe(productsLoader);
   }
 
-  // Removed OpenSearch integration
-  // function testOpenSearch() {
-  //   client.queries
-  //     .searchProducts({
-  //       authMode: "apiKey",
-  //     })
-  //     .then((result) => {
-  //       console.log(result);
-  //     })
-  //     .catch((error) => {
-  //       console.log(error);
-  //     });
-  // }
-
   useEffect(() => {
-    fetchProductPromise(fetchLimit).then((res) => {
-      console.log(res);
-      setProductList(res.data);
-      nextToken = res.nextToken;
-      startObserver();
-    });
+    if (mounted) return;
+    mounted = true;
+    startObserver();
+    for (let i = 0; i < 10; i++) {
+      setProductList((prev) => [...prev, generateRandomProduct()]);
+    }
   }, []);
 
   return (
@@ -94,10 +56,7 @@ function Products() {
                     (e.currentTarget as HTMLFormElement)
                       .elements[0] as HTMLInputElement
                   ).value;
-                  searchProductByNamePromise(keyword).then((res) => {
-                    console.log(res);
-                    setProductList(res.data);
-                  });
+                  console.log(keyword);
                 }}
                 className="input-group mb-3 input-group-lg w-75 mx-auto"
               >
@@ -129,24 +88,12 @@ function Products() {
           </div>
 
           <div className="container py-lg-5 py-md-4 py-2">
-            {productList.length === -1 ? (
-              <Loader
-                size="large"
-                style={{
-                  marginTop: "2rem",
-                  marginInline: "auto",
-                  marginBottom: "10svh",
-                  display: "block",
-                  width: "5rem",
-                }}
-              />
-            ) : null}
             <div className="row">
               {productList.map((product, index) => (
                 <ProductCard product={product} key={index} />
               ))}
             </div>
-            {true && (
+            {/* {true && (
               <Loader
                 size="large"
                 id="products-loader"
@@ -158,7 +105,7 @@ function Products() {
                   width: "5rem",
                 }}
               />
-            )}
+            )} */}
           </div>
         </div>
       </section>

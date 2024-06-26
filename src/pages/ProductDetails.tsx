@@ -1,37 +1,15 @@
 import "./css/productDetails.css";
 import BreadCrumps from "../components/BreadCrumps";
 import { useState, useEffect } from "react";
-import type { Schema } from "../../amplify/data/resource";
-import {
-  Flex,
-  Label,
-  TextAreaField,
-  useAuthenticator,
-  Button,
-  Input,
-  Loader,
-  Text,
-} from "@aws-amplify/ui-react";
 import { useParams, useNavigate } from "react-router-dom";
-
 import { generateRandomProduct } from "../assets/utils/generateRandomProduct";
-import { getUserAttributes } from "../assets/utils/userSession";
-import { StorageImage } from "@aws-amplify/ui-react-storage";
-import {
-  client,
-  createProduct,
-  uploadImage,
-  updateProduct,
-  deleteProduct,
-  modifyImgPath,
-} from "../assets/utils/product-backend";
 
 function ProductDetails() {
   const { id } = useParams<{ id: string }>();
-  const [product, setProduct] = useState<Schema["Product"]["type"]>();
+  const [product, setProduct] = useState(generateRandomProduct());
   const [isModyfing, setIsModifying] = useState(false);
   const [img, setImg] = useState<File | null>(null);
-  const { authStatus } = useAuthenticator((context) => [context.authStatus]);
+  const authStatus = "authenticated";
   const navigate = useNavigate();
 
   function handleFileChange(event: React.ChangeEvent<HTMLInputElement>) {
@@ -56,49 +34,6 @@ function ProductDetails() {
       console.error("Product not found");
       return;
     }
-    if (product.id == "null") {
-      createProduct(product).then((res) => {
-        console.log("createProduct: ", res);
-        if (res.data) {
-          if (img) {
-            const resProduct = res.data;
-            uploadImage(res.data.id, img).then((res) => {
-              console.log("uploadImage: ", res);
-              setProduct((prev) => {
-                if (prev) {
-                  prev.imagePath = res.path;
-                }
-                return prev;
-              });
-              modifyImgPath(resProduct, res.path).then((res) => {
-                console.log("modifyImgPath: ", res);
-              });
-              setImg(null);
-            });
-          }
-          navigate(`/product-details/${res.data.id}`);
-        }
-      });
-    } else {
-      await updateProduct(product).then((res) => {
-        console.log("updateProduct: ", res);
-      });
-      if (img) {
-        await uploadImage(product.id, img).then((res) => {
-          console.log("uploadImage: ", res);
-          setProduct((prev) => {
-            if (prev) {
-              prev.imagePath = res.path;
-            }
-            return prev;
-          });
-          modifyImgPath(product, res.path).then((res) => {
-            console.log("modifyImgPath: ", res);
-          });
-          setImg(null);
-        });
-      }
-    }
     setIsModifying(false);
   }
 
@@ -107,45 +42,10 @@ function ProductDetails() {
       console.error("Product not found");
       return;
     }
-    deleteProduct(product.id).then((res) => {
-      setProduct(undefined);
-      console.log("deleteProduct: ", res);
-      navigate("/products");
-    });
+    navigate("/products");
   }
 
-  async function fetchProduct() {
-    if (window.location.href.split("/").at(-1) == "new") {
-      console.log("new product");
-      if (getUserAttributes() === null) {
-        console.error("User not authenticated");
-        navigate("/products");
-        return;
-      }
-      setProduct(generateRandomProduct());
-      setIsModifying(true);
-      return;
-    } else if (window.location.href.split("/").at(-1) == "random") {
-      const { data: items } = await client.models.Product.list();
-      console.log(items);
-      const num = Math.floor(Math.random() * items.length);
-      setProduct(items[num]);
-      return;
-    }
-    if (id) {
-      const { data: item } = await client.models.Product.get({
-        id: id,
-      });
-      if (!item) {
-        console.error("Product not found");
-        setProduct(undefined);
-        navigate("/products");
-        return;
-      }
-      setProduct(item);
-      return;
-    }
-  }
+  async function fetchProduct() {}
 
   function updateProductFromForm() {
     const form = document.querySelector(
@@ -172,7 +72,7 @@ function ProductDetails() {
       dimension: data.dimension.toString(),
       remark: data.remark.toString(),
       id: product.id,
-      imagePath: product.imagePath,
+      // imagePath: product.imagePath,
       createdAt: product.createdAt,
       updatedAt: product.updatedAt,
     };
@@ -222,172 +122,142 @@ function ProductDetails() {
           {isModyfing && product && (
             <>
               <form id="product-info-form">
-                <Flex className="input-group" direction="column" gap="small">
-                  <Label htmlFor="name">
+                <div className="input-group">
+                  <label htmlFor="name">
                     Product Name:
-                    <Text as="span" fontSize="small" color="font.error">
-                      {" "}
-                      (required)
-                    </Text>
-                  </Label>
-                  <Input
+                    <span className="error"> (required)</span>
+                  </label>
+                  <input
                     id="name"
                     name="name"
                     defaultValue={product.name}
-                    isRequired
+                    required
                   />
-                </Flex>
-                <Flex className="input-group" direction="column" gap="small">
-                  <Label htmlFor="code">Product Code:</Label>
-                  <Input
+                </div>
+                <div className="input-group">
+                  <label htmlFor="code">Product Code:</label>
+                  <input
                     id="code"
                     name="code"
                     defaultValue={product.code ?? ""}
                   />
-                </Flex>
-                <Flex className="input-group" direction="column" gap="small">
-                  <Label htmlFor="version">Product Version:</Label>
-                  <Input
+                </div>
+                <div className="input-group">
+                  <label htmlFor="version">Product Version:</label>
+                  <input
                     id="version"
                     name="version"
                     defaultValue={product.version ?? ""}
                   />
-                </Flex>
-                <Flex className="input-group" direction="column" gap="small">
-                  <TextAreaField
-                    label="Product Description:"
+                </div>
+                <div className="input-group">
+                  <label htmlFor="description">Product Descripton:</label>
+                  <textarea
                     id="description"
                     name="description"
                     rows={5}
                     defaultValue={product.description ?? ""}
                   />
-                </Flex>
-                <Flex className="input-group" direction="column" gap="small">
-                  <TextAreaField
-                    label="Product Requirement:"
+                </div>
+                <div className="input-group">
+                  <label htmlFor="requirement">Product Requirement:</label>
+                  <textarea
                     id="requirement"
                     name="requirement"
                     rows={3}
                     defaultValue={product.requirement ?? ""}
                   />
-                </Flex>
-                <Flex className="input-group" direction="column" gap="small">
-                  <Label htmlFor="price">
-                    Product Price:{" "}
-                    <Text as="span" fontSize="small" color="font.error">
-                      {" "}
-                      (required)
-                    </Text>
-                  </Label>
-                  <Input
+                </div>
+                <div className="input-group">
+                  <label htmlFor="price">
+                    Product Price: <span className="error"> (required)</span>
+                  </label>
+                  <input
                     id="price"
                     name="price"
                     defaultValue={product.price}
-                    isRequired
+                    required
                   />
-                </Flex>
-                <Flex className="input-group" direction="column" gap="small">
-                  <Label htmlFor="dimension">Product Dimension:</Label>
-                  <Input
+                </div>
+                <div className="input-group">
+                  <label htmlFor="dimension">Product Dimension:</label>
+                  <input
                     id="dimension"
                     name="dimension"
                     defaultValue={product.dimension ?? ""}
                   />
-                </Flex>
-                <Flex className="input-group" direction="column" gap="small">
-                  <Label htmlFor="remark">Product Remark:</Label>
-                  <Input
+                </div>
+                <div className="input-group">
+                  <label htmlFor="remark">Product Remark:</label>
+                  <textarea
                     id="remark"
                     name="remark"
+                    rows={3}
                     defaultValue={product.remark ?? ""}
                   />
-                </Flex>
+                </div>
               </form>
             </>
           )}
           {!product && !isModyfing && (
             <>
               <h1>Loading Product Info ...</h1>
-              <Loader
-                size="large"
-                variation="linear"
-                style={{
-                  marginTop: "2rem",
-                }}
-              />
             </>
           )}
         </div>
         <div className="grid-col">
-          {product?.imagePath ? (
-            <StorageImage
-              path={product.imagePath}
-              alt="Product Image"
-              onGetUrlError={(e) => {
-                console.log(e);
-              }}
-            ></StorageImage>
-          ) : (
-            <img src="https://placehold.co/400x300" alt="Product Placeholder" />
-          )}
+          <img src="https://placehold.co/400x300" alt="Product Placeholder" />
           {authStatus === "authenticated" && isModyfing && (
             <div className="detail-btn">
               <span>Upload Product Image</span>
-              <Input
+              <input
                 type="file"
                 accept="image/jpeg, image/png"
                 onChange={handleFileChange}
-                placeholder="hihi"
-                variation="quiet"
-              ></Input>
+              ></input>
             </div>
           )}
-          <Button
+          <button
             className="detail-btn"
             onClick={() => {
               navigate("/products");
             }}
-            variation="primary"
           >
             Back to List View
-          </Button>
+          </button>
           {authStatus === "authenticated" && !isModyfing && (
-            <Button
+            <button
               className="detail-btn"
               onClick={() => {
                 setIsModifying(true);
               }}
             >
               Modify Product
-            </Button>
+            </button>
           )}
           {!id && !isModyfing && (
-            <Button className="detail-btn" onClick={fetchProduct}>
+            <button className="detail-btn" onClick={fetchProduct}>
               Switch to a different Product
-            </Button>
+            </button>
           )}
           {authStatus === "authenticated" && isModyfing && (
-            <Button
+            <button
               className="detail-btn"
-              colorTheme="success"
-              variation="primary"
               type="submit"
               onClick={() => {
                 handleCommit();
               }}
             >
               Upload Change
-            </Button>
+            </button>
           )}
           {authStatus === "authenticated" && isModyfing && (
-            <Button
+            <button
               className="detail-btn"
               onClick={handleDelete}
-              colorTheme="error"
-              variation="primary"
             >
               Delete this Product
-            </Button>
+            </button>
           )}
         </div>
       </section>

@@ -1,4 +1,3 @@
-import { StorageImage } from "@aws-amplify/ui-react-storage";
 import { Link } from "react-router-dom";
 
 import "./css/producrCard.css";
@@ -20,22 +19,11 @@ function ProductCard({ product }: { product: Product }) {
               to={"/product-details/" + product.id}
               className="zoom d-block"
             >
-              {product.imagePath ? (
-                <StorageImage
-                  className="product-image"
-                  path={product.imagePath}
-                  alt="Product Image"
-                  onGetUrlError={(e) => {
-                    console.log(e);
-                  }}
-                ></StorageImage>
-              ) : (
-                <img
-                  className="product-image"
-                  src="https://placehold.co/400x300"
-                  alt="Product Placeholder"
-                />
-              )}
+              <img
+                className="product-image"
+                src="https://placehold.co/400x300"
+                alt="Product Placeholder"
+              />
             </Link>
             {/* floating items start*/}
             {/* <div className="product-price-badge"> Free</div>

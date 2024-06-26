@@ -34,8 +34,11 @@
 
 .productDetail-wrapper span {
   font-size: 0.75rem;
+  color: #9e0000;
 }
 
 .productDetail-wrapper .input-group {
   margin-bottom: 1.5rem;
+  display: flex;
+  flex-direction: column;
 }
